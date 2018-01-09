@@ -1,1 +1,8 @@
-*.user
+# git ignore file
+*.[user]
+*.[suo]
+*.[pdb]
+.vdcode
+TestResults/
+bin/
+obj/

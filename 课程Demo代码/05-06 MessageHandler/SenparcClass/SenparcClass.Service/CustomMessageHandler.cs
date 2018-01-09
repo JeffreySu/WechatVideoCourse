@@ -1,0 +1,215 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using Senparc.Weixin.Entities.Request;
+using Senparc.Weixin.Helpers.Extensions;
+using Senparc.Weixin.MP;
+using Senparc.Weixin.MP.AppStore;
+using Senparc.Weixin.MP.Entities;
+using Senparc.Weixin.MP.Entities.Request;
+using Senparc.Weixin.MP.Helpers;
+using Senparc.Weixin.MP.MessageHandlers;
+
+namespace SenparcClass.Service
+{
+    public class CustomMessageHandler : MessageHandler<CustomMessageContext>
+    {
+        public CustomMessageHandler(Stream inputStream, PostModel postModel = null, int maxRecordCount = 0, DeveloperInfo developerInfo = null) : base(inputStream, postModel, maxRecordCount, developerInfo)
+        {
+            base.CurrentMessageContext.ExpireMinutes = 10;
+        }
+
+        public CustomMessageHandler(XDocument requestDocument, PostModel postModel = null, int maxRecordCount = 0, DeveloperInfo developerInfo = null) : base(requestDocument, postModel, maxRecordCount, developerInfo)
+        {
+        }
+
+        public CustomMessageHandler(RequestMessageBase requestMessageBase, PostModel postModel = null, int maxRecordCount = 0, DeveloperInfo developerInfo = null) : base(requestMessageBase, postModel, maxRecordCount, developerInfo)
+        {
+        }
+
+        public override void OnExecuting()
+        {
+            var storageModel = CurrentMessageContext.StorageData as StorageModel;
+            if (storageModel != null)
+            {
+                storageModel.CmdCount++;
+            }
+
+            if (RequestMessage is RequestMessageText &&
+                (RequestMessage as RequestMessageText).Content == "qq")
+            {
+                base.CancelExcute = true;
+
+                var responseMessageText = RequestMessage.CreateResponseMessage<ResponseMessageText>();
+                responseMessageText.Content = "当前CancelExecute状态为：" + base.CancelExcute;
+                ResponseMessage = responseMessageText;
+            }
+
+            base.OnExecuting();
+        }
+
+        public override void OnExecuted()
+        {
+            if (ResponseMessage is ResponseMessageText)
+            {
+                (ResponseMessage as ResponseMessageText).Content += "\r\n【盛派网络】";
+            }
+
+            base.OnExecuted();
+        }
+
+        public override IResponseMessageBase OnTextRequest(RequestMessageText requestMessage)
+        {
+            var handler = requestMessage.StartHandler(false)
+                .Keyword("cmd", () =>
+                {
+                    var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
+
+                    CurrentMessageContext.StorageData = new StorageModel()
+                    {
+                        IsInCmd = true
+                    };
+
+                    responseMessageText.Content += "\r\n已经进入CMD状态";
+
+                    return responseMessageText;
+                })
+                .Keywords(new[] { "exit", "quit", "close" }, () =>
+                  {
+                      var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
+
+                      var storageModel = CurrentMessageContext.StorageData as StorageModel;
+                      if (storageModel != null)
+                      {
+                          storageModel.IsInCmd = false;
+                      }
+                      return responseMessageText;
+                  }).Regex(@"^http", () =>
+                  {
+                      var responseMessageNews = requestMessage.CreateResponseMessage<ResponseMessageNews>();
+
+
+                      var news = new Article()
+                      {
+                          Title = "您输入了网址：" + requestMessage.Content,
+                          Description = "这里是描述，第一行\r\n这里是描述，第二行",
+                          PicUrl = "http://sdk.weixin.senparc.com/images/book-cover-front-small-3d-transparent.png",
+                          Url = requestMessage.Content
+                      };
+
+                      responseMessageNews.Articles.Add(news);
+
+                      return responseMessageNews;
+                  }).Default(() =>
+                  {
+                      var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
+                      responseMessageText.Content = "这是一条默认的文本请求回复信息";
+                      return responseMessageText;
+                  });
+
+            var responseMessage = handler.ResponseMessage;
+            if (responseMessage is ResponseMessageText)
+            {
+                (responseMessage as ResponseMessageText).Content += "\r\n您输入了文字：" + requestMessage.Content;
+
+                var storageModel = CurrentMessageContext.StorageData as StorageModel;
+                if (storageModel != null)
+                {
+                    (responseMessage as ResponseMessageText).Content += "当前CMD Count：" +
+                    storageModel.CmdCount;
+                }
+            }
+
+            return handler.ResponseMessage as IResponseMessageBase;
+        }
+
+        public override IResponseMessageBase OnLocationRequest(RequestMessageLocation requestMessage)
+        {
+            var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
+            responseMessage.Content = "您发送了位置信息：Lat-{0}，Lon-{1}".FormatWith(requestMessage.Location_X,
+                requestMessage.Location_Y);
+            return responseMessage;
+        }
+
+        public override IResponseMessageBase OnEvent_ClickRequest(RequestMessageEvent_Click requestMessage)
+        {
+            if (requestMessage.EventKey == "123")
+            {
+                var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageNews>();
+
+
+                var news = new Article()
+                {
+                    Title = "您点击了按钮：" + requestMessage.EventKey,
+                    Description = "这里是描述，第一行\r\n这里是描述，第二行",
+                    PicUrl = "http://sdk.weixin.senparc.com/images/book-cover-front-small-3d-transparent.png",
+                    Url = "sdk.weixin.senparc.com"
+                };
+
+                responseMessage.Articles.Add(news);
+
+                return responseMessage;
+            }
+            if (requestMessage.EventKey == "A")
+            {
+                var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
+
+                var storageModel = CurrentMessageContext.StorageData as StorageModel;
+                if (storageModel != null)
+                {
+                    if (storageModel.IsInCmd)
+                    {
+                        responseMessage.Content = "当前已经进入CMD状态";
+                        responseMessage.Content += "\r\n您的上一条消息类型为：" +
+                                                   CurrentMessageContext.RequestMessages.Last().MsgType;
+                    }
+                    else
+                    {
+                        responseMessage.Content = "当前已经退出CMD状态";
+                    }
+                }
+                else
+                {
+                    responseMessage.Content = "找不到Session数据";
+                }
+
+                return responseMessage;
+            }
+            if (requestMessage.EventKey == "B")
+            {
+                return new ResponseMessageNoResponse();
+            }
+            else
+            {
+                var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
+                responseMessage.Content = "您点击了按钮：" + requestMessage.EventKey;
+                return responseMessage;
+            }
+
+        }
+
+        public override IResponseMessageBase OnTextOrEventRequest(RequestMessageText requestMessage)
+        {
+            var content = requestMessage.Content;
+            if (content == "123")
+            {
+                var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
+                responseMessage.Content = "您触发了TextOrEvent关键字：" + content;
+                return responseMessage;
+            }
+
+            return null;
+        }
+
+        public override IResponseMessageBase DefaultResponseMessage(IRequestMessageBase requestMessage)
+        {
+            var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
+            responseMessage.Content = "当前服务器时间：" + DateTime.Now;
+            return responseMessage;
+        }
+    }
+}

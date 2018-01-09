@@ -1,2 +1,4 @@
 *.pptx
 .vs
+packages/
+*.user
