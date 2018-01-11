@@ -7,3 +7,5 @@
 欢迎提供各种宝贵意见和建议！
 
 更多课程信息：https://book.weixin.senparc.com/BookHelper#c-730
+
+课程中介绍的微信开发套件 Senparc.Weixin SDK 及其 Demo 已经全部开源，请见项目：https://github.com/JeffreySu/WeiXinMPSDK
