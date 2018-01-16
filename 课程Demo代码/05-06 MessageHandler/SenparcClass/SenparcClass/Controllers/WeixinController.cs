@@ -16,6 +16,8 @@ namespace SenparcClass.Controllers
     {
         public static readonly string Token = WebConfigurationManager.AppSettings["WeixinToken"];//与微信公众账号后台的Token设置保持一致，区分大小写。
 
+        public static readonly string EncodingAESKey = WebConfigurationManager.AppSettings["WeixinEncodingAESKey"];//与微信公众账号后台的EncodingAESKey设置保持一致，区分大小写。
+
         readonly Func<string> _getRandomFileName = () => DateTime.Now.ToString("yyyyMMdd-HHmmss") + Guid.NewGuid().ToString("n").Substring(0, 6);
 
         [HttpGet]
@@ -37,8 +39,13 @@ namespace SenparcClass.Controllers
         [ActionName("Index")]
         public ActionResult Post(PostModel postModel)
         {
+            postModel.EncodingAESKey = EncodingAESKey;
+
             //创建MessgeHandler实例
             var messageHandler = new CustomMessageHandler(Request.InputStream, postModel, 10);
+
+
+            //去重
             messageHandler.OmitRepeatedMessage = true;
 
             #region 记录 Request 日志

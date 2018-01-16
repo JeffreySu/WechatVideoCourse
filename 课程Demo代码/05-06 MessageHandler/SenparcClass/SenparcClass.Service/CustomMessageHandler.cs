@@ -31,37 +31,6 @@ namespace SenparcClass.Service
         {
         }
 
-        public override void OnExecuting()
-        {
-            var storageModel = CurrentMessageContext.StorageData as StorageModel;
-            if (storageModel != null)
-            {
-                storageModel.CmdCount++;
-            }
-
-            if (RequestMessage is RequestMessageText &&
-                (RequestMessage as RequestMessageText).Content == "qq")
-            {
-                base.CancelExcute = true;
-
-                var responseMessageText = RequestMessage.CreateResponseMessage<ResponseMessageText>();
-                responseMessageText.Content = "当前CancelExecute状态为：" + base.CancelExcute;
-                ResponseMessage = responseMessageText;
-            }
-
-            base.OnExecuting();
-        }
-
-        public override void OnExecuted()
-        {
-            if (ResponseMessage is ResponseMessageText)
-            {
-                (ResponseMessage as ResponseMessageText).Content += "\r\n【盛派网络】";
-            }
-
-            base.OnExecuted();
-        }
-
         public override IResponseMessageBase OnTextRequest(RequestMessageText requestMessage)
         {
             var handler = requestMessage.StartHandler(false)
@@ -189,20 +158,53 @@ namespace SenparcClass.Service
                 responseMessage.Content = "您点击了按钮：" + requestMessage.EventKey;
                 return responseMessage;
             }
-
         }
 
         public override IResponseMessageBase OnTextOrEventRequest(RequestMessageText requestMessage)
         {
-            var content = requestMessage.Content;
-            if (content == "123")
+            if (requestMessage.Content == "123")
             {
-                var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
-                responseMessage.Content = "您触发了TextOrEvent关键字：" + content;
-                return responseMessage;
+                var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
+                responseMessageText.Content = "您在OnTextOrEventRequest消息中执行到了特定条件。当前关键字：" + requestMessage.Content;
+                return responseMessageText;
             }
 
-            return null;
+            return base.OnTextOrEventRequest(requestMessage);
+        }
+
+
+        public override void OnExecuting()
+        {
+            var storageModel = CurrentMessageContext.StorageData as StorageModel;
+            if (storageModel != null && storageModel.IsInCmd)
+            {
+                storageModel.CmdCount++;
+                
+                if (storageModel.CmdCount >= 5)
+                {
+                    //ResponseMessage = new ResponseMessageNoResponse();//不返回任何消息
+                    
+                    var responseMessageText = RequestMessage.CreateResponseMessage<ResponseMessageText>();
+                    responseMessageText.Content = "CmdCount已经大于等于5！";
+                    ResponseMessage = responseMessageText;
+                    base.CancelExcute = true;
+                }
+            }
+
+            base.OnExecuting();
+        }
+
+        public override void OnExecuted()
+        {
+            if (ResponseMessage is ResponseMessageText)
+            {
+                (ResponseMessage as ResponseMessageText).Content += "\r\n【盛派网络】";
+
+                //数据库处理（t >5 s）
+                //队列、线程/Thread
+            }
+
+            base.OnExecuted();
         }
 
         public override IResponseMessageBase DefaultResponseMessage(IRequestMessageBase requestMessage)
