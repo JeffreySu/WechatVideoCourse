@@ -1,4 +1,5 @@
-﻿using Senparc.Weixin.Cache;
+﻿using Senparc.Weixin;
+using Senparc.Weixin.Cache;
 using Senparc.Weixin.Cache.Redis;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace SenparcClass
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            Senparc.Weixin.Config.IsDebug = true;//开启日志记录状态
 
             RegisterWeixinCache();
             RegisterThreads();//必须执行在RegisterSenparcWeixin()方法之前

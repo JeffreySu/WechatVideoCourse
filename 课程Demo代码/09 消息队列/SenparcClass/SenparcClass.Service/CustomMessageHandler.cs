@@ -14,11 +14,22 @@ using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.Helpers;
 using Senparc.Weixin.MP.MessageHandlers;
 using Senparc.Weixin.MP.Containers;
+using System.Threading;
+using Senparc.Weixin.MP.AdvancedAPIs;
 
 namespace SenparcClass.Service
 {
     public class CustomMessageHandler : MessageHandler<CustomMessageContext>
     {
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+
+        public override XDocument Init(XDocument postDataDocument, object postData = null)
+        {
+            StartTime = DateTime.Now;
+            return base.Init(postDataDocument, postData);
+        }
+
         public CustomMessageHandler(Stream inputStream, PostModel postModel = null, int maxRecordCount = 0, DeveloperInfo developerInfo = null) : base(inputStream, postModel, maxRecordCount, developerInfo)
         {
             base.CurrentMessageContext.ExpireMinutes = 10;
@@ -210,6 +221,16 @@ namespace SenparcClass.Service
             }
 
             base.OnExecuted();
+
+            Thread.Sleep(5000);
+
+            EndTime = DateTime.Now;
+            var runTime = (EndTime - StartTime).TotalSeconds;
+            if (runTime > 4)
+            {
+                var queueHandler = new MessageQueueHandler();
+                ResponseMessage = queueHandler.SendMessage(WeixinOpenId, ResponseMessage);
+            }
         }
 
         public override IResponseMessageBase OnEvent_SubscribeRequest(RequestMessageEvent_Subscribe requestMessage)
@@ -223,7 +244,7 @@ namespace SenparcClass.Service
             string title = userInfo.sex == 1 ? "先生" : (userInfo.sex == 2 ? "女士" : "");
 
             var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
-            responseMessage.Content = "欢迎 【{0}{1}】 关注《微信公众号+小程序快速开发》课程！".FormatWith(nickName,title);
+            responseMessage.Content = "欢迎 【{0}{1}】 关注《微信公众号+小程序快速开发》课程！".FormatWith(nickName, title);
             return responseMessage;
         }
 
