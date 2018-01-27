@@ -16,6 +16,9 @@ using Senparc.Weixin.MP.MessageHandlers;
 using Senparc.Weixin.MP.Containers;
 using System.Threading;
 using Senparc.Weixin.MP.AdvancedAPIs;
+using System.Text.RegularExpressions;
+using Senparc.Weixin.HttpUtility;
+using SenparcClass.Service.Class10;
 
 namespace SenparcClass.Service
 {
@@ -85,7 +88,21 @@ namespace SenparcClass.Service
                       responseMessageNews.Articles.Add(news);
 
                       return responseMessageNews;
-                  }).Default(() =>
+                  })
+                  .Regex(@"天气 \S+",()=>{
+                      var city = Regex.Match(requestMessage.Content,@"(?<=天气 )(\S+)").Value;
+                      var url = "http://www.sojson.com/open/api/weather/json.shtml?city={0}".FormatWith(city.UrlDecode());
+                      var result = Senparc.Weixin.HttpUtility.Get.GetJson<WeatherResult>(url,null,null);
+                      var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
+                      responseMessageText.Content = @"天气查询
+=============
+城市：{0}
+添加时间：{1}
+日期：{2}
+Count：{3}".FormatWith(result.city, result.AddTime, result.date, result.count);
+                      return responseMessageText;
+                  })
+                  .Default(() =>
                   {
                       var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
                       responseMessageText.Content = "这是一条默认的文本请求回复信息";
@@ -222,15 +239,15 @@ namespace SenparcClass.Service
 
             base.OnExecuted();
 
-            Thread.Sleep(5000);
+            //Thread.Sleep(5000);
 
-            EndTime = DateTime.Now;
-            var runTime = (EndTime - StartTime).TotalSeconds;
-            if (runTime > 4)
-            {
-                var queueHandler = new MessageQueueHandler();
-                ResponseMessage = queueHandler.SendMessage(WeixinOpenId, ResponseMessage);
-            }
+            //EndTime = DateTime.Now;
+            //var runTime = (EndTime - StartTime).TotalSeconds;
+            //if (runTime > 4)
+            //{
+            //    var queueHandler = new MessageQueueHandler();
+            //    ResponseMessage = queueHandler.SendMessage(WeixinOpenId, ResponseMessage);
+            //}
         }
 
         public override IResponseMessageBase OnEvent_SubscribeRequest(RequestMessageEvent_Subscribe requestMessage)
