@@ -44,12 +44,15 @@ namespace SenparcClass.Controllers
 
         public ActionResult GetImage(string url = "https://sdk.weixin.senparc.com/images/book-cover-front-small-3d-transparent.png")
         {
-            var fileName = Server.MapPath("~/App_Data/DownloadImage_{0}.jpg".FormatWith(DateTime.Now.Ticks));
-            Senparc.Weixin.HttpUtility.Get.Download(url, fileName);
+            var filePath = Server.MapPath("~/App_Data/");
+            //Server.MapPath("~/App_Data/DownloadImage_{0}.jpg".FormatWith(DateTime.Now.Ticks));
+            var fileName = Senparc.Weixin.HttpUtility.Get.Download(url, filePath);
+            var newFileName = fileName + ".png";
+            System.IO.File.Move(fileName, newFileName);
 
             //Form 表单上传本地文件
             var dic = new Dictionary<string, string>();
-            dic["mediafile"] = fileName;
+            dic["file"] = newFileName;
             var uploadUrl = "http://localhost:60716/Request/UploadFile";
             //ServicePointManager.Expect100Continue = false;
 
@@ -90,7 +93,7 @@ namespace SenparcClass.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFile(HttpPostedFile file)
+        public ActionResult UploadFile(HttpPostedFileBase file)
         {
             var stream = file.InputStream;
             var fileName = Server.MapPath("~/App_Data/UploadFile.jpg");
