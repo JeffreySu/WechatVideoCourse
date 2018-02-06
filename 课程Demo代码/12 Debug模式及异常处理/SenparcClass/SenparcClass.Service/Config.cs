@@ -9,5 +9,7 @@ namespace SenparcClass.Service
     public class Config
     {
         public static string AppId = System.Configuration.ConfigurationManager.AppSettings["WeixinAppId"];
+
+        public static int LogCount = 0;
     }
 }
