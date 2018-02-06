@@ -1,0 +1,8 @@
+开始到7:41   讲visual studio 2017的下载和安装
+到11:50 讲微信web开发工具下载地址  https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html
+到15:30  讲微信公众平台后台登陆的地址登陆方式  服务号的登陆
+到21:17     微信公众号的通信方式
+到38:20     微信公众号的申请和设置   开发者AppID  开发者密码   服务器地址    令牌token   消息加密秘钥    消息加密方式(明文模式、兼容模式、安全模式)  白名单
+28:32 第一种方式
+29:50 另一种方式开始 另一种方式获取SDK 如何用团队资源管理器直接从 Github上下载微信的SDK
+到结束    如何引用Senparc.Weixin SDK
