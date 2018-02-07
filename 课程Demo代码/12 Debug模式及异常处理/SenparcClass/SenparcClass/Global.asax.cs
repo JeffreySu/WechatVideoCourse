@@ -20,11 +20,15 @@ namespace SenparcClass
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            Senparc.Weixin.Config.IsDebug = true;//开启日志记录状态
+            var dt1 = DateTime.Now;
 
+            WeixinTraceConfig();//配置微信日志记录
             RegisterWeixinCache();
             RegisterThreads();//必须执行在RegisterSenparcWeixin()方法之前
             RegisterSenparcWeixin();
+
+            var dt2 = DateTime.Now;
+            Senparc.Weixin.WeixinTrace.SendCustomLog("系统日志", "系统已经启动，启动时间：" + (dt2 - dt1).TotalMilliseconds + "ms");
         }
 
 
@@ -51,17 +55,34 @@ namespace SenparcClass
             #endregion
         }
 
-        private void RegisterThreads() {
+        private void RegisterThreads()
+        {
             Senparc.Weixin.Threads.ThreadUtility.Register();
         }
 
-        private void RegisterSenparcWeixin() {
+        private void RegisterSenparcWeixin()
+        {
             var appId = System.Configuration.ConfigurationManager.AppSettings["WeixinAppId"];
             var appSecret = System.Configuration.ConfigurationManager.AppSettings["WeixinAppSecret"];
 
             Senparc.Weixin.MP.Containers.AccessTokenContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey");
 
             //Senparc.Weixin.MP.Containers.JsApiTicketContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey-JsApiTicket");
+        }
+
+        private void WeixinTraceConfig()
+        {
+            Senparc.Weixin.Config.IsDebug = true;//开启日志记录状态
+
+            Senparc.Weixin.WeixinTrace.OnLogFunc = () =>
+            {
+                Service.Config.LogRecordCount++;
+            };
+
+            Senparc.Weixin.WeixinTrace.OnWeixinExceptionFunc = ex => {
+                Service.Config.LogExceptionRecordCount++;
+            };
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Senparc.Weixin.Helpers.Extensions;
+﻿using Senparc.Weixin.Exceptions;
+using Senparc.Weixin.Helpers.Extensions;
+using Senparc.Weixin.MP.Containers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -104,6 +106,44 @@ namespace SenparcClass.Controllers
             }
 
             return Content("文件已经下载、上传，保存到：" + fileName);
+        }
+
+        public class MyClass
+        {
+            public string Data { get; set; }
+        }
+
+
+        public ActionResult GetAccessToken() {
+
+            //var myClass = new MyClass();
+
+            //try
+            //{
+            //    if (myClass.Data == null)
+            //    {
+            //        throw new WeixinNullReferenceException("myClass.Data为null", myClass);
+            //    }
+            //}
+            //catch (WeixinNullReferenceException ex)
+            //{
+            //    if (true)
+            //    {
+            //        var obj = ex.ParentObject as MyClass;
+            //        obj.Data = "Not Null";
+
+            //        Senparc.Weixin.WeixinTrace.SendCustomLog("系统日志", ex.Message);
+            //    }
+            //}
+           
+            //var length = myClass.Data.Length;
+            //return Content("Length：" + length);
+
+            var accessToken = AccessTokenContainer.GetAccessToken(Service.Config.AppId+"invalid appid", true);
+
+            Senparc.Weixin.WeixinTrace.SendCustomLog("接口日志", "获取了新的AccessToken");
+
+            return Content("最新的AccessToken：" + accessToken+"<br />当前LogRecordCount："+Service.Config.LogRecordCount);
         }
 
     }
