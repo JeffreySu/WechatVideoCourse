@@ -1,7 +1,6 @@
 ﻿using Senparc.Weixin;
 using Senparc.Weixin.Cache;
 using Senparc.Weixin.Cache.Redis;
-using Senparc.Weixin.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,18 +20,11 @@ namespace SenparcClass
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            WeixinTraceConfig();
-
-            var dt1 = DateTime.Now;
+            Senparc.Weixin.Config.IsDebug = true;//开启日志记录状态
 
             RegisterWeixinCache();
             RegisterThreads();//必须执行在RegisterSenparcWeixin()方法之前
             RegisterSenparcWeixin();
-
-            var dt2 = DateTime.Now;
-
-            Senparc.Weixin.WeixinTrace.SendCustomLog("系统日志", "系统已启动，启动时间：{0}ms".FormatWith((dt2 - dt1).TotalMilliseconds));
-
         }
 
 
@@ -70,15 +62,6 @@ namespace SenparcClass
             Senparc.Weixin.MP.Containers.AccessTokenContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey");
 
             //Senparc.Weixin.MP.Containers.JsApiTicketContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey-JsApiTicket");
-        }
-
-        private void WeixinTraceConfig()
-        {
-            Senparc.Weixin.Config.IsDebug = true;//开启日志记录状态
-
-            Senparc.Weixin.WeixinTrace.OnLogFunc = () => {
-                Service.Config.LogCount++;
-            };
         }
     }
 }
