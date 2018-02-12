@@ -66,6 +66,7 @@ namespace SenparcClass
             var appSecret = System.Configuration.ConfigurationManager.AppSettings["WeixinAppSecret"];
 
             Senparc.Weixin.MP.Containers.AccessTokenContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey");
+            Senparc.Weixin.MP.Containers.AccessTokenContainer.Register("APPID2", "APPSECRET2", "微信公众号测试号-Bob");//可以注册多个公众号
 
             //Senparc.Weixin.MP.Containers.JsApiTicketContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey-JsApiTicket");
         }
