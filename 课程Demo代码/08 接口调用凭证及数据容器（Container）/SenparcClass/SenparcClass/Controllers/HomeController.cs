@@ -96,9 +96,9 @@ namespace SenparcClass.Controllers
              }).Result;
         }
 
-        public async Task<ActionResult> CustomMessageSync(string openId = "oxRg0uLsnpHjb8o93uVnwMK_WAVw")
+        public ActionResult CustomMessageSync(string openId = "oxRg0uLsnpHjb8o93uVnwMK_WAVw")
         {
-            return await Task.Factory.StartNew(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 for (int i = 0; i < 4; i++)
                 {
