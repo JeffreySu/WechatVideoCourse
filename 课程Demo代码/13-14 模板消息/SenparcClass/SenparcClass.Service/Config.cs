@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SenparcClass.Service
 {
-    public class TemplateMessageBag
+    public class TemplateMessageItemCourse
     {
         public string Name { get; set; }
         public string AppId { get; set; }
@@ -14,14 +14,13 @@ namespace SenparcClass.Service
         public string TemplateId { get; set; }
         public string SubscribeMsgTemplateId { get; set; }
 
-        public TemplateMessageBag(string name, string appId, string templateNumber, string templateId, string subscribeMsgTemplateId)
+        public TemplateMessageItemCourse(string name, string appId, string templateNumber, string templateId, string subscribeMsgTemplateId)
         {
             Name = name;
-            AppId = AppId;
+            AppId = appId;
             TemplateNumber = templateNumber;
             TemplateId = templateId;
             SubscribeMsgTemplateId = subscribeMsgTemplateId;
-
         }
     }
 
@@ -33,21 +32,38 @@ namespace SenparcClass.Service
 
         public static int LogExceptionRecordCount = 0;
 
-        public static Dictionary<string, List<TemplateMessageBag>> TemplateMessageCollection;
+        public static Dictionary<string, List<TemplateMessageItemCourse>> TemplateMessageCollection;
 
         static Config()
         {
-            TemplateMessageCollection = new Dictionary<string, List<TemplateMessageBag>>();
+            TemplateMessageCollection = new Dictionary<string, List<TemplateMessageItemCourse>>();
 
-
-            TemplateMessageCollection[AppId] = new List<TemplateMessageBag>() {
-                new TemplateMessageBag("课程提醒", AppId, "63l8YSI2uYqlZwb8dkMSy2Lp8caHcaWc2Id0b_XYvtM",
-                    "KU0hL0UVWzJA_8jmolH_o1UcNuNIcvQ36EiPcdd6F8Y", "OPENTM411013653"),
+            TemplateMessageCollection[AppId] = new List<TemplateMessageItemCourse>() {
+                new TemplateMessageItemCourse("视频培训测试", AppId, "Nil",
+                    "nSS3Jx7q-eOhCM-bpv1jdSm3_slq2c1pxF_PKUNXj5g", "Nil"),
                 //new TemplateMessageBag("课程提醒", AppId, "63l8YSI2uYqlZwb8dkMSy2Lp8caHcaWc2Id0b_XYvtM",
                 //    "KU0hL0UVWzJA_8jmolH_o1UcNuNIcvQ36EiPcdd6F8Y", "OPENTM411013653"),
             };
 
             //var tmBag = TemplateMessageCollection[AppId].FirstOrDefault(z => z.Name == "课程提醒");
+        }
+
+        /// <summary>
+        /// 获取TemplateMessageBag
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static TemplateMessageItemCourse GetTemplateMessageBag(string appId,string name)
+        {
+            if (!TemplateMessageCollection.ContainsKey(appId))
+            {
+                return null;
+            }
+
+            var bagList = TemplateMessageCollection[appId];
+            var bag = bagList.FirstOrDefault(z => z.Name == name);
+            return bag;
         }
     }
 

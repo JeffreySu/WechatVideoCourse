@@ -1,12 +1,15 @@
 ﻿using Senparc.Weixin.Exceptions;
 using Senparc.Weixin.Helpers.Extensions;
+using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 using Senparc.Weixin.MP.Containers;
+using SenparcClass.Service.Class14;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -114,7 +117,8 @@ namespace SenparcClass.Controllers
         }
 
 
-        public ActionResult GetAccessToken() {
+        public ActionResult GetAccessToken()
+        {
 
             //var myClass = new MyClass();
 
@@ -135,16 +139,62 @@ namespace SenparcClass.Controllers
             //        Senparc.Weixin.WeixinTrace.SendCustomLog("系统日志", ex.Message);
             //    }
             //}
-           
+
             //var length = myClass.Data.Length;
             //return Content("Length：" + length);
 
-            var accessToken = AccessTokenContainer.GetAccessToken(Service.Config.AppId+"invalid appid", true);
+            var accessToken = AccessTokenContainer.GetAccessToken(Service.Config.AppId + "invalid appid", true);
 
             Senparc.Weixin.WeixinTrace.SendCustomLog("接口日志", "获取了新的AccessToken");
 
-            return Content("最新的AccessToken：" + accessToken+"<br />当前LogRecordCount："+Service.Config.LogRecordCount);
+            return Content("最新的AccessToken：" + accessToken + "<br />当前LogRecordCount：" + Service.Config.LogRecordCount);
         }
 
+
+    //    public void Send()
+    //    {
+    //        Task.Factory.StartNew(async () =>
+    //        {
+    //            var url = "https://weixin.senparc.com";
+    //            var data = new TemplateMessageCourseNotice("欢迎学习微信开发", DateTime.Now.ToString(),
+    //Request.UserHostAddress, "微信公众号+小程序快速开发第14节", "录制中", "祝大家新年快乐！",
+    //"感谢大家对盛派网络的支持！", url);
+    //            var result = await Senparc.Weixin.MP.AdvancedAPIs.TemplateApi.SendTemplateMessageAsync(Service.Config.AppId, openId, data);
+    //        });
+    //    }
+
+        public async Task<ActionResult> SendTemplateMessage(string openId = "oxRg0uLsnpHjb8o93uVnwMK_WAVw")
+        {
+            //var bag = Service.Config.GetTemplateMessageBag(Service.Config.AppId, "视频培训测试");
+
+            //if (bag == null)
+            //{
+            //    throw new WeixinException("模板名称不存在！模板：培训测试");
+            //}
+
+            //{{first.DATA}} Time：{{keyword1.DATA}} Host：{{keyword2.DATA}} Service：{{keyword3.DATA}} Status：{{keyword4.DATA}} Message：{{keyword5.DATA}} {{remark.DATA}}
+            //var data = new
+            //{
+            //    first    = new TemplateDataItem("欢迎学习微信开发", "#ff0000"),
+            //    keyword1 = new TemplateDataItem(DateTime.Now.ToString()),
+            //    keyword2 = new TemplateDataItem(Request.UserHostAddress),
+            //    keyword3 = new TemplateDataItem("微信公众号+小程序快速开发第14节"),
+            //    keyword4 = new TemplateDataItem("录制中"),
+            //    keyword5 = new TemplateDataItem("祝大家新年快乐！"),
+            //    remark      = new TemplateDataItem("感谢大家对盛派网络的支持！")
+            //};
+            //var result = Senparc.Weixin.MP.AdvancedAPIs
+            //.TemplateApi.SendTemplateMessage(Service.Config.AppId, openId, bag.TemplateId, url, data);
+
+            var url = "https://weixin.senparc.com";
+
+
+            var data = new TemplateMessageCourseNotice("欢迎学习微信开发", DateTime.Now.ToString(),
+                Request.UserHostAddress, "微信公众号+小程序快速开发第14节", "录制中", "祝大家新年快乐！",
+                "感谢大家对盛派网络的支持！", url);
+            var result = await Senparc.Weixin.MP.AdvancedAPIs.TemplateApi.SendTemplateMessageAsync(Service.Config.AppId, openId, data);
+
+            return Content(result.ToJson());
+        }
     }
 }

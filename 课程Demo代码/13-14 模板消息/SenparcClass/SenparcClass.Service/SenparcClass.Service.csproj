@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class10\WeatherResult.cs" />
+    <Compile Include="Class14\TemplateMessageCourseNotice.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="CustomMessageContext.cs" />
     <Compile Include="CustomMessageHandler.cs" />

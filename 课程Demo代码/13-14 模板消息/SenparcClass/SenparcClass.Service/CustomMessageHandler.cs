@@ -19,6 +19,7 @@ using Senparc.Weixin.MP.AdvancedAPIs;
 using System.Text.RegularExpressions;
 using Senparc.Weixin.HttpUtility;
 using SenparcClass.Service.Class10;
+using Senparc.Weixin.Exceptions;
 
 namespace SenparcClass.Service
 {
@@ -89,10 +90,11 @@ namespace SenparcClass.Service
 
                       return responseMessageNews;
                   })
-                  .Regex(@"天气 \S+",()=>{
-                      var city = Regex.Match(requestMessage.Content,@"(?<=天气 )(\S+)").Value;
+                  .Regex(@"天气 \S+", () =>
+                  {
+                      var city = Regex.Match(requestMessage.Content, @"(?<=天气 )(\S+)").Value;
                       var url = "http://www.sojson.com/open/api/weather/json.shtml?city={0}".FormatWith(city.UrlDecode());
-                      var result = Senparc.Weixin.HttpUtility.Get.GetJson<WeatherResult>(url,null,null);
+                      var result = Senparc.Weixin.HttpUtility.Get.GetJson<WeatherResult>(url, null, null);
                       var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
                       responseMessageText.Content = @"天气查询
 =============
@@ -263,6 +265,28 @@ Count：{3}".FormatWith(result.city, result.AddTime, result.date, result.count);
             var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
             responseMessage.Content = "欢迎 【{0}{1}】 关注《微信公众号+小程序快速开发》课程！".FormatWith(nickName, title);
             return responseMessage;
+        }
+
+        public override IResponseMessageBase OnEvent_TemplateSendJobFinishRequest(RequestMessageEvent_TemplateSendJobFinish requestMessage)
+        {
+            if (requestMessage.Status != "success")
+            {
+                //进行逻辑处理
+            }
+            else
+            {
+                try
+                {
+                    Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendText(Service.Config.AppId, WeixinOpenId, "模板消息发送成功，MsgId：" + requestMessage.MsgID);
+                }
+                catch (WeixinException ex)
+                {
+                    //处理
+                }
+            }
+
+
+            return new SuccessResponseMessage();
         }
 
         public override IResponseMessageBase DefaultResponseMessage(IRequestMessageBase requestMessage)
