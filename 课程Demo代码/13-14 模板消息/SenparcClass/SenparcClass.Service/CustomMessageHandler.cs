@@ -277,6 +277,7 @@ Count：{3}".FormatWith(result.city, result.AddTime, result.date, result.count);
             {
                 try
                 {
+                    //注意：此方法内不能再发送模板消息，否则会引发系循环
                     Senparc.Weixin.MP.AdvancedAPIs.CustomApi.SendText(Service.Config.AppId, WeixinOpenId, "模板消息发送成功，MsgId：" + requestMessage.MsgID);
                 }
                 catch (WeixinException ex)
