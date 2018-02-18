@@ -192,7 +192,8 @@ namespace SenparcClass.Controllers
             var data = new TemplateMessageCourseNotice("欢迎学习微信开发", DateTime.Now.ToString(),
                 Request.UserHostAddress, "微信公众号+小程序快速开发第14节", "录制中", "祝大家新年快乐！",
                 "感谢大家对盛派网络的支持！", url);
-            var result = await Senparc.Weixin.MP.AdvancedAPIs.TemplateApi.SendTemplateMessageAsync(Service.Config.AppId, openId, data);
+            var result = await Senparc.Weixin.MP.AdvancedAPIs.TemplateApi
+                .SendTemplateMessageAsync(Service.Config.AppId, openId, data);
 
             return Content(result.ToJson());
         }
