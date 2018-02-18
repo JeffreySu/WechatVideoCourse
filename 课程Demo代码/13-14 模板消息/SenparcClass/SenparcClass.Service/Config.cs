@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SenparcClass.Service
 {
-    public class TemplateMessageItemCourse
+    public class TemplateMessageItem
     {
         public string Name { get; set; }
         public string AppId { get; set; }
@@ -14,7 +14,7 @@ namespace SenparcClass.Service
         public string TemplateId { get; set; }
         public string SubscribeMsgTemplateId { get; set; }
 
-        public TemplateMessageItemCourse(string name, string appId, string templateNumber, string templateId, string subscribeMsgTemplateId)
+        public TemplateMessageItem(string name, string appId, string templateNumber, string templateId, string subscribeMsgTemplateId)
         {
             Name = name;
             AppId = appId;
@@ -32,14 +32,14 @@ namespace SenparcClass.Service
 
         public static int LogExceptionRecordCount = 0;
 
-        public static Dictionary<string, List<TemplateMessageItemCourse>> TemplateMessageCollection;
+        public static Dictionary<string, List<TemplateMessageItem>> TemplateMessageCollection;
 
         static Config()
         {
-            TemplateMessageCollection = new Dictionary<string, List<TemplateMessageItemCourse>>();
+            TemplateMessageCollection = new Dictionary<string, List<TemplateMessageItem>>();
 
-            TemplateMessageCollection[AppId] = new List<TemplateMessageItemCourse>() {
-                new TemplateMessageItemCourse("视频培训测试", AppId, "Nil",
+            TemplateMessageCollection[AppId] = new List<TemplateMessageItem>() {
+                new TemplateMessageItem("视频培训测试", AppId, "Nil",
                     "nSS3Jx7q-eOhCM-bpv1jdSm3_slq2c1pxF_PKUNXj5g", "Nil"),
                 //new TemplateMessageBag("课程提醒", AppId, "63l8YSI2uYqlZwb8dkMSy2Lp8caHcaWc2Id0b_XYvtM",
                 //    "KU0hL0UVWzJA_8jmolH_o1UcNuNIcvQ36EiPcdd6F8Y", "OPENTM411013653"),
@@ -54,7 +54,7 @@ namespace SenparcClass.Service
         /// <param name="appId"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static TemplateMessageItemCourse GetTemplateMessageBag(string appId,string name)
+        public static TemplateMessageItem GetTemplateMessageBag(string appId,string name)
         {
             if (!TemplateMessageCollection.ContainsKey(appId))
             {
