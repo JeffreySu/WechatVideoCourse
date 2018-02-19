@@ -27,6 +27,7 @@ namespace SenparcClass.Service
     public static class Config
     {
         public static string AppId = System.Configuration.ConfigurationManager.AppSettings["WeixinAppId"];
+        public static string AppSecret = System.Configuration.ConfigurationManager.AppSettings["WeixinAppSecret"];
 
         public static int LogRecordCount = 0;
 
