@@ -2,6 +2,8 @@
 
 当前项目用于提供《微信公众号+小程序快速开发》视频教程课件及教学中的示例代码。
 
+网易云课堂对《微信公众号+小程序快速开发》课程质量做出了高度的评价，课程已被评为“A”级课程，在“微信开发”课程中综合排名第一。
+
 网易云课堂地址：http://study.163.com/course/courseMain.htm?courseId=1004873017
 
 更多课程信息：https://book.weixin.senparc.com/BookHelper#c-730
