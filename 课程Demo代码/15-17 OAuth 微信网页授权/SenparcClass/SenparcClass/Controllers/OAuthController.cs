@@ -45,10 +45,10 @@ namespace SenparcClass.Controllers
         /// <returns></returns>
         public ActionResult Callback(string code, string state, string returnUrl, string msg)
         {
-            if (state == null || state != Session["OAuthState"] as string)
-            {
-                return Content("非法进入！");
-            }
+            //if (state == null || state != Session["OAuthState"] as string)
+            //{
+            //    return Content("非法进入！");
+            //}
 
             if (string.IsNullOrEmpty(code))
             {
