@@ -2,3 +2,5 @@
 .vs
 packages/
 *.user
+/课程Demo代码/12 Debug模式及异常处理/SenparcClass/SenparcClass/App_Data/WeixinTraceLog/SenparcWeixinTrace-20180207.log
+*.log
