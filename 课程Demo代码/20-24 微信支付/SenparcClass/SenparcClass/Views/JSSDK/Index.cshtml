@@ -1,0 +1,26 @@
+﻿@model SenparcClass.Models.ViewData.JSSDK_Index
+
+@{
+    Layout = "~/Views/Shared/_JSSDKLayout.cshtml";
+    ViewBag.Title = "JSSDK测试";
+}
+
+@*
+    使用JSSDK，首先要到微信公众平台【公众号设置】下的【功能设置】里面设置“JS接口安全域名”
+*@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>公众号JSSDK演示</title>
+</head>
+<body>
+    <h1>公众号JSSDK演示</h1>
+    <h2>Msg：@Model.Msg</h2>
+    <h3>UserName：@Model.UserName</h3>
+    <div>
+        此页面是Senparc.Weixin.MP JSSDK的演示，可以点击右上方按钮，转发到朋友圈或者朋友进行测试。<br />
+        顺利的话，转发的内容可以看到自定义的标题，配有一个自定义图片。
+    </div>
+</body>
+</html>
