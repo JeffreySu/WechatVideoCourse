@@ -28,6 +28,9 @@ namespace SenparcClass.Service
     {
         public static string AppId = System.Configuration.ConfigurationManager.AppSettings["WeixinAppId"];
         public static string AppSecret = System.Configuration.ConfigurationManager.AppSettings["WeixinAppSecret"];
+        public static string MchId = System.Configuration.ConfigurationManager.AppSettings["WeixinMchId"];
+        public static string TenPayV3Notify = System.Configuration.ConfigurationManager.AppSettings["TenPayV3_TenpayNotify"];
+        public static string TenPayV3_Key = System.Configuration.ConfigurationManager.AppSettings["TenPayV3_Key"];
 
         public static int LogRecordCount = 0;
 

@@ -168,6 +168,7 @@
     <Compile Include="Controllers\OAuthBaseController.cs" />
     <Compile Include="Controllers\OAuthController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
+    <Compile Include="Controllers\TenPayV3Controller.cs" />
     <Compile Include="Controllers\WeixinController.cs" />
     <Compile Include="Filters\CustomSenparcOAuthAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -175,6 +176,7 @@
     </Compile>
     <Compile Include="Models\ViewData\OAuthBaseVD.cs" />
     <Compile Include="Models\ViewData\JSSDKVD.cs" />
+    <Compile Include="Models\ViewData\TenPayV3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +221,8 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\JSSDK\Index.cshtml" />
     <Content Include="Views\Shared\_JSSDKLayout.cshtml" />
+    <Content Include="Views\TenPayV3\Index.cshtml" />
+    <Content Include="Views\TenPayV3\Order.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

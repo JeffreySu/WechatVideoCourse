@@ -1,0 +1,46 @@
+﻿@model SenparcClass.Models.ViewData.TenPayV3_Odrer
+@{
+    ViewBag.Title = "订单支付 - " + Model;
+}
+
+<script>
+       document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+            //公众号支付
+            jQuery('a#getBrandWCPayRequest').click(function (e) {
+                WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                    "appId": "@Model.JsSdkUiPackage.AppId", //公众号名称，由商户传入
+                    "timeStamp": "@Model.JsSdkUiPackage.Timestamp", //时间戳
+                    "nonceStr": "@Model.JsSdkUiPackage.NonceStr", //随机串
+                    "package": "@Model.JsSdkUiPackage.Package",//扩展包
+                    "signType": "MD5", //微信签名方式:MD5
+                    "paySign": "@Model.JsSdkUiPackage.PaySign" //微信签名
+                }, function (res) {
+
+                    alert('支付完成！');
+
+                    //location.href = "https://xxxxx";
+
+                    //alert(JSON.stringify(res));
+
+                    @*if (res.err_msg == "get_brand_wcpay_request:ok") {
+                        if (confirm('支付成功！点击“确定”进入退款流程测试。')) {
+                            location.href = '@Url.Action("Refund", "TenPayV3")';
+                        }
+                        //console.log(JSON.stringify(res));
+                    }*@
+                    // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                    //因此微信团队建议，当收到ok返回时，向商户后台询问是否收到交易成功的通知，若收到通知，前端展示交易成功的界面；若此时未收到通知，商户后台主动调用查询订单接口，查询订单的当前状态，并反馈给前端展示相应的界面。
+                });
+
+            });
+
+            WeixinJSBridge.log('yo~ ready.');
+
+        }, false);
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+产品名称：@Model.Product
+
+<a id="getBrandWCPayRequest" href="javascript:void(0);">支付</a>
