@@ -21,10 +21,10 @@ namespace SenparcClass.Controllers
             {
                 var model = ViewData.Model as Base_TenPayV3VD;
 
-                var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(Service.Config.AppId, Service.Config.AppSecret,
-              Request.Url.AbsoluteUri);
+                //  var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(Service.Config.AppId, Service.Config.AppSecret,
+                //Request.Url.AbsoluteUri);
 
-                model.JsSdkUiPackage = jssdkUiPackage;
+                //  model.JsSdkUiPackage = jssdkUiPackage;
             }
 
             base.OnActionExecuted(filterContext);
@@ -46,8 +46,13 @@ namespace SenparcClass.Controllers
             var sp_billno = string.Format("{0}{1}{2}", "1234567890", DateTime.Now.ToString("yyyyMMddHHmmss"),
                         TenPayV3Util.BuildRandomStr(6));
             var openId = User.Identity.Name;
-            var nonceStr = TenPayV3Util.GetNoncestr();
-            var timeStamp = TenPayV3Util.GetTimestamp();
+
+
+            var jssdkUiPackage = JSSDKHelper.GetJsSdkUiPackage(Service.Config.AppId, Service.Config.AppSecret,
+                Request.Url.AbsoluteUri);
+
+            var nonceStr = jssdkUiPackage.NonceStr;
+            var timeStamp = jssdkUiPackage.Timestamp;
 
 
             var xmlDataInfo = new TenPayV3UnifiedorderRequestData(
@@ -63,6 +68,7 @@ namespace SenparcClass.Controllers
             var vd = new TenPayV3_Odrer()
             {
                 Product = name,
+                JsSdkUiPackage = jssdkUiPackage,
                 Package = package,
                 PaySign = paySign
             };
@@ -162,6 +168,45 @@ namespace SenparcClass.Controllers
                 new WeixinException(ex.Message, ex);
                 throw;
             }
+        }
+
+
+        public ActionResult Refund(int orderId = 0)
+        {
+            string nonceStr = TenPayV3Util.GetNoncestr();
+
+            string outTradeNo = (string)(Session["BillNo"]);
+            string outRefundNo = "OutRefunNo-" + DateTime.Now.Ticks;
+            int totalFee = (int)(Session["BillFee"]);
+            int refundFee = totalFee;
+            string opUserId = Service.Config.MchId;
+            var dataInfo = new TenPayV3RefundRequestData(Service.Config.AppId, Service.Config.MchId, Service.Config.TenPayV3_Key,
+                null, nonceStr, null, outTradeNo, outRefundNo, totalFee, refundFee, opUserId, null);
+            var cert = @"D:\cert\apiclient_cert_SenparcRobot.p12";//根据自己的证书位置修改
+            var password = Service.Config.MchId;//默认为商户号，建议修改
+            var result = TenPayV3.Refund(dataInfo, cert, password);
+
+            return Content("退款成功！");
+        }
+
+        public ActionResult PayResult(int orderId)
+        {
+
+            return View();
+        }
+
+        /// <summary>
+        /// 从PayResult发出的Ajax请求，可以进行多次重试
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public ActionResult CheckOrderState(int orderId)
+        {
+            //Ajax请求
+
+            //调用TenPayV3.OrderQuery()方法，进行支付确认
+
+            return View();
         }
     }
 }
