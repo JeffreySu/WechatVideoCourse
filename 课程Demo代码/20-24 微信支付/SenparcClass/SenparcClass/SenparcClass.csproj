@@ -167,6 +167,7 @@
     <Compile Include="Controllers\JSSDKController.cs" />
     <Compile Include="Controllers\OAuthBaseController.cs" />
     <Compile Include="Controllers\OAuthController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\TenPayV3Controller.cs" />
     <Compile Include="Controllers\WeixinController.cs" />
@@ -223,6 +224,7 @@
     <Content Include="Views\Shared\_JSSDKLayout.cshtml" />
     <Content Include="Views\TenPayV3\Index.cshtml" />
     <Content Include="Views\TenPayV3\Order.cshtml" />
+    <Content Include="Views\Product\H5Pay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
