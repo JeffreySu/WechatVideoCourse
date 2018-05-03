@@ -16,6 +16,11 @@ Page({
       url: '../logs/logs'
     })
   },
+  openUserInfo:function(){
+    wx.navigateTo({
+      url: '../userinfo/userinfo',
+    })
+  },
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.setData({
@@ -44,11 +49,11 @@ Page({
       })
     }
 
-    //启动计时器
-    var that = this;
-    var interval = setInterval(function(){
-      that.setData({currentTime : new Date().toLocaleTimeString()},1000);
-    });
+    // //启动计时器
+    // var that = this;
+    // var interval = setInterval(function(){
+    //   that.setData({currentTime : new Date().toLocaleTimeString()},1000);
+    // });
   },
   getUserInfo: function(e) {
     console.log(e)

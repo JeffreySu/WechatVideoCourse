@@ -1,2 +1,10 @@
 <!--pages/userinfo/userinfo.wxml-->
-<text>pages/userinfo/userinfo.wxml</text>
+<view>
+<text>昵称：{{userInfo.nickName}}</text>
+</view>
+<view>
+<text>城市：{{userInfo.city}}</text>
+</view>
+<view>
+<text>省份：{{userInfo.province}}</text>
+</view>
