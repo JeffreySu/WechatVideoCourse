@@ -21,6 +21,11 @@ Page({
       url: '../userinfo/userinfo',
     })
   },
+  oauth:function(){
+    wx.navigateTo({
+      url: '../oauth/oauth',
+    })
+  },
   onLoad: function () {
     if (app.globalData.userInfo) {
       this.setData({

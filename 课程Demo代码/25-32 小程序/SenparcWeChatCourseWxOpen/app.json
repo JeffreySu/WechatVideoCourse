@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/logs/logs",
-    "pages/userinfo/userinfo"
+    "pages/userinfo/userinfo",
+    "pages/oauth/oauth"
   ],
   "window": {
     "backgroundTextStyle": "light",
