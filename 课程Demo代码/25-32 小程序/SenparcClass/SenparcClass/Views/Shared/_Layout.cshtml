@@ -37,10 +37,14 @@
         <p>
             当前登录状态：@User.Identity.IsAuthenticated
         </p>
-        <p>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <p>
 
-            @Html.ActionLink("退出登录", "Logout", "OAuth")
-        </p>
+                @Html.ActionLink("退出登录", "Logout", "OAuth")
+            </p>
+        }
+
         <footer>
             <p>&copy; @DateTime.Now.Year - 微信公众号 + 小程序快速开发 - 盛派课堂</p>
         </footer>
