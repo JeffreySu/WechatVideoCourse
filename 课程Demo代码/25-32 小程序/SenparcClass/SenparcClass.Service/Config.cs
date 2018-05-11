@@ -32,6 +32,10 @@ namespace SenparcClass.Service
         public static string TenPayV3Notify = System.Configuration.ConfigurationManager.AppSettings["TenPayV3_TenpayNotify"];
         public static string TenPayV3_Key = System.Configuration.ConfigurationManager.AppSettings["TenPayV3_Key"];
 
+        //小程序
+        public static string WxOpenAppId = System.Configuration.ConfigurationManager.AppSettings["WxOpenWeixinAppId"];
+        public static string WxOpenAppSecret = System.Configuration.ConfigurationManager.AppSettings["WxOpenWeixinAppSecret"];
+
         public static int LogRecordCount = 0;
 
         public static int LogExceptionRecordCount = 0;

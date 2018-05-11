@@ -21,6 +21,38 @@ Page({
       url: '../userinfo/userinfo',
     })
   },
+  //处理wx.request请求
+  doRequest: function () {
+    var that = this;
+    wx.request({
+      url: wx.getStorageSync('domainName') + '/WxOpen/RequestData',
+      data: { nickName: that.data.userInfo.nickName },
+      method: 'POST', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+      // header: {}, // 设置请求的 header
+      success: function (res) {
+        console.log(res);
+        // success
+        var json = res.data;
+        //模组对话框
+        wx.showModal({
+          title: '收到消息',
+          content: json.msg,
+          showCancel: false,
+          success: function (modalRes) {
+            if (modalRes.confirm) {
+              console.log('用户点击确定')
+            }
+          }
+        });
+      },
+      fail: function () {
+        // fail
+      },
+      complete: function () {
+        // complete
+      }
+    })
+  },
   oauth:function(){
     wx.navigateTo({
       url: '../oauth/oauth',

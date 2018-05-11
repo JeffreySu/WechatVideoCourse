@@ -53,8 +53,8 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Senparc.Weixin, Version=4.18.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Senparc.Weixin.4.18.14\lib\net45\Senparc.Weixin.dll</HintPath>
+    <Reference Include="Senparc.Weixin, Version=4.20.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.4.20.2\lib\net45\Senparc.Weixin.dll</HintPath>
     </Reference>
     <Reference Include="Senparc.Weixin.Cache.Redis, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Senparc.Weixin.Cache.Redis.1.4.0-beta1\lib\net45\Senparc.Weixin.Cache.Redis.dll</HintPath>
@@ -62,11 +62,14 @@
     <Reference Include="Senparc.Weixin.Cache.Redis.RedLock, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Senparc.Weixin.Cache.Redis.RedLock.1.0.1-beta1\lib\net45\Senparc.Weixin.Cache.Redis.RedLock.dll</HintPath>
     </Reference>
-    <Reference Include="Senparc.Weixin.MP, Version=14.8.12.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Senparc.Weixin.MP.14.8.12\lib\net45\Senparc.Weixin.MP.dll</HintPath>
+    <Reference Include="Senparc.Weixin.MP, Version=14.10.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.MP.14.10.3\lib\net45\Senparc.Weixin.MP.dll</HintPath>
     </Reference>
     <Reference Include="Senparc.Weixin.MP.MvcExtension, Version=5.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Senparc.Weixin.MP.MVC.5.1.1\lib\net45\Senparc.Weixin.MP.MvcExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="Senparc.Weixin.WxOpen, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.WxOpen.1.9.1\lib\net45\Senparc.Weixin.WxOpen.dll</HintPath>
     </Reference>
     <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net45\StackExchange.Redis.dll</HintPath>
@@ -171,6 +174,7 @@
     <Compile Include="Controllers\RequestController.cs" />
     <Compile Include="Controllers\TenPayV3Controller.cs" />
     <Compile Include="Controllers\WeixinController.cs" />
+    <Compile Include="Controllers\WxOpenController.cs" />
     <Compile Include="Filters\CustomSenparcOAuthAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -228,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\WxOpen\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
