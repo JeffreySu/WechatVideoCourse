@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/userinfo/userinfo",
+    "pages/oauth/oauth"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Senparc WeChat",
+    "navigationBarTextStyle": "black"
+  }
+}

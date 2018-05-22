@@ -1,0 +1,16 @@
+﻿@model Senparc.Weixin.MP.AdvancedAPIs.OAuth.OAuthUserInfo
+@{
+    /**/
+
+    ViewBag.Title = Model.nickname + "的信息";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<h3><i>提示：@ViewData["Msg"]</i></h3>
+
+<p>昵称：@Model.nickname</p>
+<p>性别：@Model.sex</p>
+<p>城市：@Model.city</p>
+<p>OpenId：@Model.openid</p>
+<p><img src="@Model.headimgurl.Replace("http","https")" width="200" alt="@Model.nickname" /></p>

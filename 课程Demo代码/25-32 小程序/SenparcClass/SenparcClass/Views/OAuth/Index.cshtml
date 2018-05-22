@@ -1,0 +1,14 @@
+﻿@model String
+@{
+    ViewBag.Title = "OAuth引导页面";
+}
+
+<h2>OAuth引导页面</h2>
+
+<p>当前登录状态：@ViewData["IsLogined"] </p>
+<p>当前登录账号：@ViewData["UserName"]</p>
+
+<p>
+    <a href="@Model">点击这里打开授权页面</a>
+
+</p>

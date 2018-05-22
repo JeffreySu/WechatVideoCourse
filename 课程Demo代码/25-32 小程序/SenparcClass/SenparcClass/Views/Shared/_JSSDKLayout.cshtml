@@ -1,0 +1,141 @@
+﻿@model SenparcClass.Models.ViewData.Base_JSSDKVD
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 微信公众号 + 小程序快速开发 - 盛派课堂</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!--jQuery非JS-SDK必须-->
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="@(Request.Url.Scheme)://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+        wx.config({
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: '@Model.JsSdkUiPackage.AppId', // 必填，公众号的唯一标识
+            timestamp: '@Model.JsSdkUiPackage.Timestamp', // 必填，生成签名的时间戳
+            nonceStr: '@Model.JsSdkUiPackage.NonceStr', // 必填，生成签名的随机串
+            signature: '@Model.JsSdkUiPackage.Signature',// 必填，签名
+            jsApiList: [
+                    'checkJsApi',
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo',
+                    'hideMenuItems',
+                    'showMenuItems',
+                    'hideAllNonBaseMenuItem',
+                    'showAllNonBaseMenuItem',
+                    'translateVoice',
+                    'startRecord',
+                    'stopRecord',
+                    'onRecordEnd',
+                    'playVoice',
+                    'pauseVoice',
+                    'stopVoice',
+                    'uploadVoice',
+                    'downloadVoice',
+                    'chooseImage',
+                    'previewImage',
+                    'uploadImage',
+                    'downloadImage',
+                    'getNetworkType',
+                    'openLocation',
+                    'getLocation',
+                    'hideOptionMenu',
+                    'showOptionMenu',
+                    'closeWindow',
+                    'scanQRCode',
+                    'chooseWXPay',
+                    'openProductSpecificView',
+                    'addCard',
+                    'chooseCard',
+                    'openCard'
+            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2。详见：http://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html
+        });
+
+        wx.error(function (res) {
+            console.log(res);
+            alert('验证失败');
+        });
+
+         wx.ready(function () {
+                var url = '@(Request.Url.Scheme)://s101.weixin.senparc.com';
+                var link = url + '@(Request.Url.PathAndQuery)';
+                var imgUrl = url + '/images/v2/ewm_01.png';
+
+                //转发到朋友圈
+                wx.onMenuShareTimeline({
+                    title: 'JSSDK朋友圈转发测试',
+                    link: link,
+                    imgUrl: imgUrl,
+                    success: function () {
+                        alert('转发成功！');
+                    },
+                    cancel: function () {
+                        alert('转发失败！');
+                    }
+                });
+                //转发给朋友
+                wx.onMenuShareAppMessage({
+                    title: 'JSSDK朋友圈转发测试',
+                    desc: '转发给朋友',
+                    link: link,
+                    imgUrl: imgUrl,
+                    type: 'link',
+                    dataUrl: '',
+                    success: function () {
+                        alert('转发成功！');
+                    },
+                    cancel: function () {
+                        alert('转发失败！');
+                    }
+                });
+            });
+    </script>
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("应用程序名称", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("主页", "Index", "Home")</li>
+                    <li>@Html.ActionLink("关于", "About", "Home")</li>
+                    <li>@Html.ActionLink("联系方式", "Contact", "Home")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+
+        <p>
+            当前登录状态：@User.Identity.IsAuthenticated
+        </p>
+        <p>
+
+            @Html.ActionLink("退出登录", "Logout", "OAuth")
+        </p>
+        <footer>
+            <p>&copy; @DateTime.Now.Year - 微信公众号 + 小程序快速开发 - 盛派课堂</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,15 @@
+﻿@model SenparcClass.Models.ViewData.TenPayV3_Index
+@{
+    ViewBag.Title = "产品列表";
+}
+
+<h2>产品列表</h2>
+
+<ul>
+    @foreach (var item in Model.ProductList)
+    {
+        <li>
+            @Html.ActionLink(item, "Order", new { name = item }, null)
+        </li>
+    }
+</ul>
