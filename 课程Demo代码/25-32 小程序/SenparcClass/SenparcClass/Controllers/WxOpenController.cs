@@ -8,6 +8,7 @@ using Senparc.Weixin.WxOpen.Entities.Request;
 using Senparc.Weixin.WxOpen.Helpers;
 using SenparcClass.Service;
 using SenparcClass.Service.WxOpen;
+using SenparcClass.Service.WxOpen.TemplateMessage.WxOpen;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -227,6 +228,31 @@ namespace SenparcClass.Controllers
                 msg = string.Format("水印验证：{0}",
                         checkWartmark ? "通过" : "不通过")
             });
+        }
+
+        [HttpPost]
+        public ActionResult TemplateTest(string sessionId, string formId)
+        {
+            var sessionBag = SessionContainer.GetSession(sessionId);
+            var openId = sessionBag != null ? sessionBag.OpenId : "用户未正确登陆";
+
+            var data = new WxOpenTemplateMessage_PaySuccessNotice(
+                "在线购买（小程序Demo测试）", DateTime.Now, "图书众筹", "1234567890",
+                100, "400-031-8816", "https://sdk.senparc.weixin.com");
+
+            try
+            {
+                Senparc.Weixin.WxOpen.AdvancedAPIs
+                    .Template.TemplateApi
+                    .SendTemplateMessage(
+                        AppId, openId, data.TemplateId, data, formId, "pages/index/index", "图书", "#fff00");
+
+                return Json(new { success = true, msg = "发送成功，请返回消息列表中的【服务通知】查看模板消息。\r\n点击模板消息还可重新回到小程序内。" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, openId = openId, formId = formId, msg = ex.Message });
+            }
         }
 
     }

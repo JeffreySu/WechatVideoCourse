@@ -66,6 +66,7 @@
     <Compile Include="StorageModel.cs" />
     <Compile Include="WxOpen\CustomWxOpenMessageContext.cs" />
     <Compile Include="WxOpen\CustomWxOpenMessageHandler.cs" />
+    <Compile Include="WxOpen\TemplateMessage\WxOpenTemplateMessage_PaySuccessNotice.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

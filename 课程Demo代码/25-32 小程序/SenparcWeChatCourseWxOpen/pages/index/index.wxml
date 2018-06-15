@@ -29,6 +29,15 @@
  <view>
      <button bindtap="oauth"> 网页授权 </button>
   </view>
+
+  <!-- 模板消息 -->
+  <form report-submit="true" bindsubmit="formTemplateMessageSubmit">
+  <button formType="submit" type="primary"
+  hover-class="other-button-hover" class="btn-DoRequest">
+  测试模板消息
+  </button>
+  </form>
+
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
   </view>
