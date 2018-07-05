@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/userinfo/userinfo",
-    "pages/oauth/oauth"
+    "pages/oauth/oauth",
+    "pages/websocket/websocket"
   ],
   "window": {
     "backgroundTextStyle": "light",

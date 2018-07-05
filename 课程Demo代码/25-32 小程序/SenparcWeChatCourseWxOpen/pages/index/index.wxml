@@ -40,6 +40,11 @@
 
   <!-- 微信支付 -->
   <button bindtap="wxPay" class="btn-DoRequest"  hover-class="other-button-hover" >微信支付(1分钱)</button>
+
+    <!-- WebSocket -->
+  <button type="devalut" bindtap="bindWebsocketTap">
+  WebSocket
+  </button>
   
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
