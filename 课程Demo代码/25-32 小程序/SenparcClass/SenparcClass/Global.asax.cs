@@ -1,6 +1,7 @@
 ﻿using Senparc.Weixin;
 using Senparc.Weixin.Cache;
 using Senparc.Weixin.Cache.Redis;
+using SenparcClass.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,10 @@ namespace SenparcClass
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+
+            Senparc.WebSocket.WebSocketConfig.RegisterRoutes(RouteTable.Routes);
+            Senparc.WebSocket.WebSocketConfig.RegisterMessageHandler<CustomWebSocketMessageHandler>();
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

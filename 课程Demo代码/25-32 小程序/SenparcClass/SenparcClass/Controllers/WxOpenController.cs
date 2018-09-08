@@ -1,6 +1,7 @@
 ﻿using Senparc.Weixin;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.MvcExtension;
+using Senparc.Weixin.MP.TenPayLibV3;
 using Senparc.Weixin.WxOpen.AdvancedAPIs.Sns;
 using Senparc.Weixin.WxOpen.Containers;
 using Senparc.Weixin.WxOpen.Entities;
@@ -8,6 +9,7 @@ using Senparc.Weixin.WxOpen.Entities.Request;
 using Senparc.Weixin.WxOpen.Helpers;
 using SenparcClass.Service;
 using SenparcClass.Service.WxOpen;
+using SenparcClass.Service.WxOpen.TemplateMessage.WxOpen;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -172,7 +174,7 @@ namespace SenparcClass.Controllers
                 //Session["WxOpenUser"] = jsonResult;//使用Session保存登陆信息（不推荐）
                 //使用SessionContainer管理登录信息（推荐）
                 var sessionBag = SessionContainer.UpdateSession(null, jsonResult.openid, jsonResult.session_key);
-                
+
                 //注意：生产环境下SessionKey属于敏感信息，不能进行传输！
                 return Json(new { success = true, msg = "OK", sessionId = sessionBag.Key, sessionKey = sessionBag.SessionKey });
             }
@@ -229,5 +231,79 @@ namespace SenparcClass.Controllers
             });
         }
 
+        [HttpPost]
+        public ActionResult TemplateTest(string sessionId, string formId)
+        {
+            var sessionBag = SessionContainer.GetSession(sessionId);
+            var openId = sessionBag != null ? sessionBag.OpenId : "用户未正确登陆";
+
+            var data = new WxOpenTemplateMessage_PaySuccessNotice(
+                "在线购买（小程序Demo测试）", DateTime.Now, "图书众筹", "1234567890",
+                100, "400-031-8816", "https://sdk.senparc.weixin.com");
+
+            try
+            {
+                Senparc.Weixin.WxOpen.AdvancedAPIs
+                    .Template.TemplateApi
+                    .SendTemplateMessage(
+                        AppId, openId, data.TemplateId, data, formId, "pages/index/index", "图书", "#fff00");
+
+                return Json(new { success = true, msg = "发送成功，请返回消息列表中的【服务通知】查看模板消息。\r\n点击模板消息还可重新回到小程序内。" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, openId = openId, formId = formId, msg = ex.Message });
+            }
+        }
+
+
+        public ActionResult GetPrepayid(string sessionId)
+        {
+            try
+            {
+                var sessionBag = SessionContainer.GetSession(sessionId);
+                var openId = sessionBag.OpenId;
+
+
+                //生成订单10位序列号，此处用时间和随机数生成，商户根据自己调整，保证唯一
+                var sp_billno = string.Format("{0}{1}{2}", Service.Config.MchId/*10位*/, DateTime.Now.ToString("yyyyMMddHHmmss"),
+                        Guid.NewGuid().ToString("n").Substring(0, 6));
+                //生成订单信息并保存到数据库
+
+                var timeStamp = TenPayV3Util.GetTimestamp();
+                var nonceStr = TenPayV3Util.GetNoncestr();
+
+                var body = "小程序微信支付Demo";
+                var price = 1;//单位：分
+                var xmlDataInfo = new TenPayV3UnifiedorderRequestData(Service.Config.WxOpenAppId, Service.Config.MchId,
+                    body, sp_billno, price, Request.UserHostAddress, Service.Config.TenPayV3Notify,
+                    TenPayV3Type.JSAPI, openId, Service.Config.TenPayV3_Key, nonceStr);
+
+                var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
+
+                var packageStr = "prepay_id=" + result.prepay_id;
+
+                return Json(new
+                {
+                    success = true,
+                    prepay_id = result.prepay_id,
+                    appId = Service.Config.WxOpenAppId,
+                    timeStamp,
+                    nonceStr,
+                    package = packageStr,
+                    //signType = "MD5",
+                    paySign = TenPayV3.GetJsPaySign(Service.Config.WxOpenAppId, timeStamp, nonceStr, packageStr, Service.Config.TenPayV3_Key)
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    msg = ex.Message
+                });
+            }
+
+        }
     }
 }
