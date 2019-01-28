@@ -1,5 +1,6 @@
-﻿using Senparc.Weixin.Exceptions;
-using Senparc.Weixin.Helpers.Extensions;
+﻿using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.HttpUtility;
+using Senparc.Weixin.Exceptions;
 using Senparc.Weixin.MP.AdvancedAPIs.TemplateMessage;
 using Senparc.Weixin.MP.Containers;
 using SenparcClass.Service.Class14;
@@ -19,7 +20,7 @@ namespace SenparcClass.Controllers
     {
         public ActionResult Get(string url = "https://www.baidu.com")
         {
-            var html = Senparc.Weixin.HttpUtility.RequestUtility.HttpGet(url, encoding: Encoding.GetEncoding("GB2312"));
+            var html = RequestUtility.HttpGet(url, encoding: Encoding.GetEncoding("GB2312"));
 
             html += "<script>alert('This is a remote page')</script>";
 
@@ -30,7 +31,7 @@ namespace SenparcClass.Controllers
         {
             var url = "http://www.baidu.com";
             var cookieContainer = new CookieContainer();
-            var html = Senparc.Weixin.HttpUtility.RequestUtility.HttpGet(url, cookieContainer, Encoding.UTF8, null, null, false);
+            var html = RequestUtility.HttpGet(url, cookieContainer, Encoding.UTF8, null, null, false);
 
             return Content(html);
         }
@@ -40,7 +41,7 @@ namespace SenparcClass.Controllers
 
             var formData = new Dictionary<string, string>();
             formData["checkcode"] = code;
-            var html = Senparc.Weixin.HttpUtility.RequestUtility.HttpPost(url, null, formData);
+            var html = RequestUtility.HttpPost(url, null, formData);
 
             html += "<span sytle='color:red'>alert('it's a remote page by POST')</script>";
 
@@ -51,7 +52,7 @@ namespace SenparcClass.Controllers
         {
             var filePath = Server.MapPath("~/App_Data/");
             //Server.MapPath("~/App_Data/DownloadImage_{0}.jpg".FormatWith(DateTime.Now.Ticks));
-            var fileName = Senparc.Weixin.HttpUtility.Get.Download(url, filePath);
+            var fileName = Senparc.CO2NET.HttpUtility.Get.Download(url, filePath);
             var newFileName = fileName + ".png";
             System.IO.File.Move(fileName, newFileName);
 
@@ -61,7 +62,7 @@ namespace SenparcClass.Controllers
             var uploadUrl = "http://localhost:60716/Request/UploadFile";
             //ServicePointManager.Expect100Continue = false;
 
-            var uploadResult = Senparc.Weixin.HttpUtility.RequestUtility.HttpPost(uploadUrl, fileDictionary: dic);
+            var uploadResult = RequestUtility.HttpPost(uploadUrl, fileDictionary: dic);
 
             return Content("图片已保存到：" + fileName + "<br/>" + uploadResult);
         }
@@ -72,12 +73,12 @@ namespace SenparcClass.Controllers
 
             using (var ms = new MemoryStream())
             {
-                Senparc.Weixin.HttpUtility.Get.Download(url, ms);
+                Senparc.CO2NET.HttpUtility.Get.Download(url, ms);
                 ms.Seek(0, SeekOrigin.Begin);
 
                 //上传流
                 var uploadUrl = "http://localhost:60716/Request/UploadImage";
-                Senparc.Weixin.HttpUtility.RequestUtility.HttpPost(uploadUrl, null, ms);
+                RequestUtility.HttpPost(uploadUrl, null, ms);
             }
 
             return Content("图片已保存到：" + fileName);

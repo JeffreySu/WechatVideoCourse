@@ -1,8 +1,8 @@
 ﻿using Senparc.Weixin.Exceptions;
 using Senparc.Weixin.HttpUtility;
-using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.Helpers;
-using Senparc.Weixin.MP.TenPayLibV3;
+using Senparc.Weixin.TenPay;
+using Senparc.Weixin.TenPay.V3;
 using SenparcClass.Models.ViewData;
 using System;
 using System.Collections.Generic;

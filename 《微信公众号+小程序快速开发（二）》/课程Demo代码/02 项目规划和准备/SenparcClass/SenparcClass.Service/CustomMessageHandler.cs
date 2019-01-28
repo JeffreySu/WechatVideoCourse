@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Senparc.Weixin.Entities.Request;
-using Senparc.Weixin.Helpers.Extensions;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AppStore;
 using Senparc.Weixin.MP.Entities;
@@ -20,6 +18,11 @@ using System.Text.RegularExpressions;
 using Senparc.Weixin.HttpUtility;
 using SenparcClass.Service.Class10;
 using Senparc.Weixin.Exceptions;
+using Senparc.NeuChar.Entities;
+using Senparc.NeuChar.Entities.Request;
+using Senparc.NeuChar.Helpers;
+using Senparc.CO2NET.Extensions;
+using Senparc.NeuChar;
 
 namespace SenparcClass.Service
 {
@@ -28,7 +31,7 @@ namespace SenparcClass.Service
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
-        public override XDocument Init(XDocument postDataDocument, object postData = null)
+        public override XDocument Init(XDocument postDataDocument, IEncryptPostModel postData = null)
         {
             StartTime = DateTime.Now;
             return base.Init(postDataDocument, postData);
@@ -94,7 +97,7 @@ namespace SenparcClass.Service
                   {
                       var city = Regex.Match(requestMessage.Content, @"(?<=天气 )(\S+)").Value;
                       var url = "http://www.sojson.com/open/api/weather/json.shtml?city={0}".FormatWith(city.UrlDecode());
-                      var result = Senparc.Weixin.HttpUtility.Get.GetJson<WeatherResult>(url, null, null);
+                      var result = Senparc.CO2NET.HttpUtility.Get.GetJson<WeatherResult>(url, null, null);
                       var responseMessageText = requestMessage.CreateResponseMessage<ResponseMessageText>();
                       responseMessageText.Content = @"天气查询
 =============

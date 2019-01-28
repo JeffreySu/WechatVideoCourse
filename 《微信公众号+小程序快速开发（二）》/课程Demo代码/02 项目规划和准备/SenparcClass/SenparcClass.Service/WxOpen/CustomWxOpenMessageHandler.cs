@@ -1,4 +1,5 @@
-﻿using Senparc.Weixin.WxOpen.Entities;
+﻿using Senparc.NeuChar.Entities;
+using Senparc.Weixin.WxOpen.Entities;
 using Senparc.Weixin.WxOpen.Entities.Request;
 using Senparc.Weixin.WxOpen.MessageHandlers;
 using System;

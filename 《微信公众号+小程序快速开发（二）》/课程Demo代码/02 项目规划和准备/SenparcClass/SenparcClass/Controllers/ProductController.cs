@@ -1,6 +1,7 @@
-﻿using Senparc.Weixin.HttpUtility;
-using Senparc.Weixin.MP;
-using Senparc.Weixin.MP.TenPayLibV3;
+﻿using Senparc.CO2NET.Extensions;
+using Senparc.Weixin.HttpUtility;
+using Senparc.Weixin.TenPay;
+using Senparc.Weixin.TenPay.V3;
 using System;
 using System.Collections.Generic;
 using System.Linq;

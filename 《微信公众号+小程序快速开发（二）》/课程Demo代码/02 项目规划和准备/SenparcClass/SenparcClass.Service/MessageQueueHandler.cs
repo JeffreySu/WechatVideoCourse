@@ -1,4 +1,5 @@
-﻿using Senparc.Weixin.MessageQueue;
+﻿using Senparc.CO2NET.MessageQueue;
+using Senparc.NeuChar.Entities;
 using Senparc.Weixin.MP.AdvancedAPIs;
 using Senparc.Weixin.MP.Entities;
 using System;

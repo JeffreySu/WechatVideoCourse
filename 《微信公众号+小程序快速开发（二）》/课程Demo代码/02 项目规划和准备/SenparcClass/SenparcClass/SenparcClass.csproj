@@ -89,6 +89,9 @@
     <Reference Include="Senparc.Weixin.MP.MvcExtension, Version=7.2.3.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Senparc.Weixin.MP.MVC.7.2.3.2\lib\net45\Senparc.Weixin.MP.MvcExtension.dll</HintPath>
     </Reference>
+    <Reference Include="Senparc.Weixin.TenPay, Version=1.1.2.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Senparc.Weixin.TenPay.1.1.2.1\lib\net45\Senparc.Weixin.TenPay.dll</HintPath>
+    </Reference>
     <Reference Include="Senparc.Weixin.WxOpen, Version=3.3.4.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Senparc.Weixin.WxOpen.3.3.4.1\lib\net45\Senparc.Weixin.WxOpen.dll</HintPath>
     </Reference>

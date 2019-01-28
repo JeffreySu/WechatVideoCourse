@@ -1,6 +1,11 @@
-﻿using Senparc.Weixin;
+﻿using Senparc.CO2NET;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Weixin;
 using Senparc.Weixin.Cache;
 using Senparc.Weixin.Cache.Redis;
+using Senparc.Weixin.Entities;
+using Senparc.Weixin.MP;
+using Senparc.Weixin.WxOpen;
 using SenparcClass.Service;
 using System;
 using System.Collections.Generic;
@@ -27,10 +32,44 @@ namespace SenparcClass
 
             var dt1 = DateTime.Now;
 
+            /* 
+           * CO2NET 全局注册开始
+           * 建议按照以下顺序进行注册
+           */
+
+            /*
+             * CO2NET 是从 Senparc.Weixin 分离的底层公共基础模块，经过了长达 6 年的迭代优化。
+             * 关于 CO2NET 在所有项目中的通用设置可参考 CO2NET 的 Sample：
+             * https://github.com/Senparc/Senparc.CO2NET/blob/master/Sample/Senparc.CO2NET.Sample.netcore/Startup.cs
+             */
+
+
+            //设置全局 Debug 状态
+            var isGLobalDebug = true;
+            //全局设置参数，将被储存到 Senparc.CO2NET.Config.SenparcSetting
+            var senparcSetting = SenparcSetting.BuildFromWebConfig(isGLobalDebug);
+            //也可以通过这种方法在程序任意位置设置全局 Debug 状态：
+            //Senparc.CO2NET.Config.IsDebug = isGLobalDebug;
+
+            //CO2NET 全局注册，必须！！
+            IRegisterService register = RegisterService.Start(senparcSetting).UseSenparcGlobal();
+
+            /* 微信配置开始
+            * 建议按照以下顺序进行注册
+            */
+
+            //设置微信 Debug 状态
+            var isWeixinDebug = true;
+            //全局设置参数，将被储存到 Senparc.Weixin.Config.SenparcWeixinSetting
+            var senparcWeixinSetting = SenparcWeixinSetting.BuildFromWebConfig(isWeixinDebug);
+            //也可以通过这种方法在程序任意位置设置微信的 Debug 状态：
+            //Senparc.Weixin.Config.IsDebug = isWeixinDebug;
+
+            register.UseSenparcWeixin(senparcWeixinSetting, Senparc.CO2NET.Config.SenparcSetting);
+
             WeixinTraceConfig();//配置微信日志记录
             RegisterWeixinCache();
-            RegisterThreads();//必须执行在RegisterSenparcWeixin()方法之前
-            RegisterSenparcWeixin();
+            RegisterSenparcWeixin(register, senparcWeixinSetting);
 
             var dt2 = DateTime.Now;
             Senparc.Weixin.WeixinTrace.SendCustomLog("系统日志", "系统已经启动，启动时间：" + (dt2 - dt1).TotalMilliseconds + "ms");
@@ -46,37 +85,22 @@ namespace SenparcClass
             Senparc.Weixin.Config.DefaultCacheNamespace = "SenparcClassWeixinCache";
 
             #region  Redis配置
-            //如果留空，默认为localhost（默认端口）
-            var redisConfiguration = System.Configuration.ConfigurationManager.AppSettings["Cache_Redis_Configuration"];
-            RedisManager.ConfigurationOption = redisConfiguration;
+            var redisConfigurationStr = Senparc.CO2NET.Config.SenparcSetting.Cache_Redis_Configuration;
 
-            //如果不执行下面的注册过程，则默认使用本地缓存
+            Senparc.CO2NET.Cache.Redis.Register.SetConfigurationOption(redisConfigurationStr);
 
-            if (!string.IsNullOrEmpty(redisConfiguration) && redisConfiguration != "Redis配置")
-            {
-                CacheStrategyFactory.RegisterObjectCacheStrategy(() => RedisObjectCacheStrategy.Instance);//Redis
-            }
-
+            //以下会立即将全局缓存设置为 Redis
+            Senparc.CO2NET.Cache.Redis.Register.UseKeyValueRedisNow();//键值对缓存策略（推荐）
             #endregion
         }
 
-        private void RegisterThreads()
+
+        private void RegisterSenparcWeixin(IRegisterService register, SenparcWeixinSetting senparcWeixinSetting)
         {
-            Senparc.Weixin.Threads.ThreadUtility.Register();
-        }
+            var weixinSetting = Senparc.Weixin.Config.SenparcWeixinSetting;
 
-        private void RegisterSenparcWeixin()
-        {
-            var appId = System.Configuration.ConfigurationManager.AppSettings["WeixinAppId"];
-            var appSecret = System.Configuration.ConfigurationManager.AppSettings["WeixinAppSecret"];
-
-            Senparc.Weixin.MP.Containers.AccessTokenContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey");
-            Senparc.Weixin.MP.Containers.AccessTokenContainer.Register("APPID2", "APPSECRET2", "微信公众号测试号-Bob");//可以注册多个公众号
-
-            //小程序
-            Senparc.Weixin.MP.Containers.AccessTokenContainer.Register(SenparcClass.Service.Config.WxOpenAppId, SenparcClass.Service.Config.WxOpenAppSecret, "WX快速开发小程序");
-
-            //Senparc.Weixin.MP.Containers.JsApiTicketContainer.Register(appId, appSecret, "微信公众号测试号-Jeffrey-JsApiTicket");
+            register.RegisterMpAccount(senparcWeixinSetting, "微信公众号测试号-Jeffrey")
+                    .RegisterWxOpenAccount(senparcWeixinSetting, "小程序");
         }
 
         private void WeixinTraceConfig()
@@ -88,7 +112,8 @@ namespace SenparcClass
                 Service.Config.LogRecordCount++;
             };
 
-            Senparc.Weixin.WeixinTrace.OnWeixinExceptionFunc = ex => {
+            Senparc.Weixin.WeixinTrace.OnWeixinExceptionFunc = ex =>
+            {
                 Service.Config.LogExceptionRecordCount++;
             };
 

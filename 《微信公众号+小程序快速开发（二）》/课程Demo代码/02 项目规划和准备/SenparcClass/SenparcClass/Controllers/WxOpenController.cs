@@ -1,7 +1,7 @@
 ﻿using Senparc.Weixin;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.MvcExtension;
-using Senparc.Weixin.MP.TenPayLibV3;
+using Senparc.Weixin.TenPay.V3;
 using Senparc.Weixin.WxOpen.AdvancedAPIs.Sns;
 using Senparc.Weixin.WxOpen.Containers;
 using Senparc.Weixin.WxOpen.Entities;
@@ -173,7 +173,7 @@ namespace SenparcClass.Controllers
             {
                 //Session["WxOpenUser"] = jsonResult;//使用Session保存登陆信息（不推荐）
                 //使用SessionContainer管理登录信息（推荐）
-                var sessionBag = SessionContainer.UpdateSession(null, jsonResult.openid, jsonResult.session_key);
+                var sessionBag = SessionContainer.UpdateSession(null, jsonResult.openid, jsonResult.session_key, null);
 
                 //注意：生产环境下SessionKey属于敏感信息，不能进行传输！
                 return Json(new { success = true, msg = "OK", sessionId = sessionBag.Key, sessionKey = sessionBag.SessionKey });
@@ -277,7 +277,7 @@ namespace SenparcClass.Controllers
                 var price = 1;//单位：分
                 var xmlDataInfo = new TenPayV3UnifiedorderRequestData(Service.Config.WxOpenAppId, Service.Config.MchId,
                     body, sp_billno, price, Request.UserHostAddress, Service.Config.TenPayV3Notify,
-                    TenPayV3Type.JSAPI, openId, Service.Config.TenPayV3_Key, nonceStr);
+                   Senparc.Weixin.TenPay.TenPayV3Type.JSAPI, openId, Service.Config.TenPayV3_Key, nonceStr);
 
                 var result = TenPayV3.Unifiedorder(xmlDataInfo);//调用统一订单接口
 

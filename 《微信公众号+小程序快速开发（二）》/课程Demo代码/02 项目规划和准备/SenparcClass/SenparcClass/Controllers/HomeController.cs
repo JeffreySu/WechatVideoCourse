@@ -1,5 +1,6 @@
-﻿using Senparc.Weixin.Cache;
-using Senparc.Weixin.Helpers.Extensions;
+﻿using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.Extensions;
+using Senparc.Weixin.Cache;
 using Senparc.Weixin.MP.Containers;
 using SenparcClass.Service;
 using System;
