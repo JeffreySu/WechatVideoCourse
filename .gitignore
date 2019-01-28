@@ -5,3 +5,5 @@ packages/
 /课程Demo代码/12 Debug模式及异常处理/SenparcClass/SenparcClass/App_Data/WeixinTraceLog/SenparcWeixinTrace-20180207.log
 *.log
 /《微信公众号+小程序快速开发（二）》/课程安排（二）.xlsx
+bin/
+obj/

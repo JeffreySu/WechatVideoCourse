@@ -1,0 +1,55 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap1" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view>
+  <view>
+     <button bindtap="openUserInfo"> 查看用户详情 </button>
+  </view>
+
+  <!-- 请求数据 -->
+  <button type="primary" bindtap="doRequest" 
+  hover-class="other-button-hover" class="btn-DoRequest">
+  获取数据
+  </button>
+
+    <!-- 进入客服 -->
+ <view class="btn-contact">
+      <contact-button 
+        size="20"
+        session-from="Senparc.Weixin" 
+        open-type='contact'
+        >进入客服，查看消息接口</contact-button>
+  </view>
+
+ <view>
+     <button bindtap="oauth"> 网页授权 </button>
+  </view>
+
+  <!-- 模板消息 -->
+  <form report-submit="true" bindsubmit="formTemplateMessageSubmit">
+  <button formType="submit" type="primary"
+  hover-class="other-button-hover" class="btn-DoRequest">
+  测试模板消息
+  </button>
+  </form>
+
+  <!-- 微信支付 -->
+  <button bindtap="wxPay" class="btn-DoRequest"  hover-class="other-button-hover" >微信支付(1分钱)</button>
+
+    <!-- WebSocket -->
+  <button type="devalut" bindtap="bindWebsocketTap">
+  WebSocket
+  </button>
+  
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+  <view class="time">
+    <text class="time-text">{{currentTime}}</text>
+  </view>
+</view>
